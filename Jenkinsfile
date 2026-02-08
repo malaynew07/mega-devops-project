@@ -36,11 +36,21 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                kubectl set image deployment/ecommerce-backend \
+                backend=$DOCKER_IMAGE:$DOCKER_TAG \
+                -n ecommerce
+                '''
+            }
+        }
     }
 
     post {
         success {
-            echo "Build and Push Successful 🚀"
+            echo "Build, Push & Deploy Successful 🚀"
         }
         failure {
             echo "Pipeline Failed ❌"
